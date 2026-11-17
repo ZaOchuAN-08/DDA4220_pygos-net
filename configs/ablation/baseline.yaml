@@ -1,0 +1,25 @@
+seed: 42
+deterministic: true
+output_dir: outputs/baseline
+data:
+  train_manifest: data/splits/train.jsonl
+  val_manifest: data/splits/val.jsonl
+  crop_size: 256
+  sigma: 4.0
+  stride: 8
+  support_threshold: 0.001
+  num_workers: 4
+  pin_memory: true
+training:
+  epochs: 600
+  batch_size: 16
+  lr: 0.00001
+  weight_decay: 0.0001
+  selection_start_epoch: 101
+  grad_clip_norm: null
+model:
+  class_path: pygosnet.models.pygosnet.PygosNet
+  kwargs: {use_dcb: false}
+loss:
+  class_path: pygosnet.losses.combined.CombinedLoss
+  kwargs: {use_hard_negative: false}

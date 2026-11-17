@@ -1,0 +1,14 @@
+{
+  "dataset": "BAS aerial penguin tiles from Dryad DOI 10.5061/dryad.8931zcrv8",
+  "image_count": 738,
+  "split_counts": {
+    "train": 446,
+    "val": 146,
+    "test": 146
+  },
+  "seed": 42,
+  "method": "random shuffle with fixed seed and fixed 446/146/146 sizes",
+  "is_original_author_image_assignment": false,
+  "duplicate_annotation_source": null,
+  "warning": "Reconstructed split, not a recovered official per-image split. The source paper reports the 3:1:1 split sizes but not the per-image assignment in the supplied files."
+}
