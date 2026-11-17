@@ -1,5 +1,19 @@
 # Pygos-Net (DDA4220)
 
+## Automatic pipeline: CUDA / MPS / CPU
+
+```bash
+# Safe default: environment and data checks only; no training.
+python scripts/run_pipeline.py
+# Evaluate an existing model; epoch is read from the checkpoint.
+python scripts/run_pipeline.py --mode evaluate --checkpoint outputs/your_run/last.pt
+# Explicit new training (budget is configurable, not fixed at 20).
+python scripts/run_pipeline.py --mode train-eval --config configs/ablation/baseline.yaml --epochs 50 --batch-size 1
+```
+
+See [pipeline modes, outputs and examples](docs/pipeline.md). The device defaults to CUDA, then MPS, then CPU; `--device` can override it. Existing output directories are never overwritten. No new training starts unless `--mode train-eval` is explicitly selected.
+
+
 ## Integration branch: prepare the committed raw data
 
 The `integration/abcd-interfaces` branch includes the raw ZIPs, existing JSONL manifests, and ABCD interface repairs. After installing with `python -m pip install -e '.[dev]'`, run:
