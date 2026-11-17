@@ -1,5 +1,12 @@
 # Data preparation
 
+## Existing raw ZIPs and manifests on the integration branch
+
+Use `python scripts/prepare_images.py` to arrange the ZIPs already present in `data/raw/` according to the existing JSONL manifests. Use `--verify-only` to check a prepared directory. This does not regenerate splits or resolve annotations again. See [raw data setup](../docs/raw_data_setup.md).
+
+The older external-archive workflow below remains available for intentional reconstruction.
+
+
 Download the Dryad archive `doi_10_5061_dryad_8931zcrv8__v20230306.zip` and keep it outside Git. The archive contains four image ZIPs and four Labelbox JSON exports.
 
 Run the preparation command first **without** a duplicate-source choice:

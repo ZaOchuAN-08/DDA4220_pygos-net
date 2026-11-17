@@ -1,6 +1,8 @@
 # ABCD integration check and runbook
 
-Checked 17 November 2026 against main commit `9c3501b68e515be6ac2f981d40578ea14f2f44eb`.
+Checked 17 November 2026. The branch now includes main raw-data commit `c880d84450a953beaca8e4bce36f28d42b829d12`.
+
+For the current one-command raw-data setup, start with [raw_data_setup.md](raw_data_setup.md).
 Integration branch: `integration/abcd-interfaces`. This branch contains the latest main plus the interface repairs; main is not modified by publishing this branch.
 
 ## Findings and local fixes
@@ -29,7 +31,7 @@ B's existing output interface already matched A/C and did not need changing:
 
 ## Still required before formal research experiments
 
-- Actual image files and their local paths. The latest main already includes the adjudicated full/train/val/test JSONL manifests (738 images total). These labels were inspected; no real images were used in the engineering runs.
+- Actual raw data are now available on this branch. `scripts/prepare_images.py` has restored and verified all 738 PNG paths. A real-data batch has passed forward/backward and one optimizer step with random initialization; formal training and pretrained validation remain outstanding.
 - Verify actual official pretrained weights load. Defaults remain pretrained=True; `--no-pretrained` is only for offline engineering checks.
 - C's background term currently lacks Top-K selection, rho/eta and annotation-tolerance exclusion. It must be completed or described as simplified background MSE. Do not label the current four-way run as the complete proposal hard-negative ablation.
 - C's segmentation weighting/reduction and SSIM settings still need source/proposal fidelity review before claiming strict replication. Defaults currently use equal foreground/background BCE weights, with normalization by total pixel weights.
@@ -50,7 +52,15 @@ PYTHONPATH=src ../model-env/bin/python -m pytest -q
 
 On another machine use Python >=3.10, create an environment and run `python -m pip install -e '.[dev]'` in the extracted project. Then ordinary `python scripts/...` commands use the repaired source. The verified environment is Python 3.12.14, torch 2.15.0 and torchvision 0.29.2.
 
-### 1. Prepare actual data
+### 1. Prepare the committed raw data
+
+```bash
+PYTHONPATH=src ../model-env/bin/python scripts/prepare_images.py --report data/processed/image_preparation_report.json
+```
+
+This uses the existing ZIPs and preserves the committed manifests. See the linked raw-data guide for validation and counts.
+
+#### Optional: reconstruct from the external combined archive
 
 A's preparation script expects a combined archive containing the image ZIPs and annotation JSONs. Use its actual path. LUKE is the overlap selection already recorded in main's metadata; this runbook preserves that choice.
 

@@ -10,3 +10,7 @@ __pycache__/
 venv/
 .env
 .DS_Store
+
+# Regenerated from the committed raw ZIPs by scripts/prepare_images.py
+/data/raw/images/
+/data/processed/image_preparation_report.json

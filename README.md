@@ -1,5 +1,20 @@
 # Pygos-Net (DDA4220)
 
+## Integration branch: prepare the committed raw data
+
+The `integration/abcd-interfaces` branch includes the raw ZIPs, existing JSONL manifests, and ABCD interface repairs. After installing with `python -m pip install -e '.[dev]'`, run:
+
+```bash
+python scripts/prepare_images.py --report data/processed/image_preparation_report.json
+python scripts/prepare_images.py --verify-only
+python -m pytest -q
+```
+
+The preparation script restores all 738 PNGs at the paths referenced by the manifests, skips macOS metadata, and validates image dimensions, labels, and split consistency. It preserves the existing annotation choices and splits. No new dataset download or re-annotation is needed.
+
+See [raw data setup and training steps](docs/raw_data_setup.md) and [integration runbook](docs/integration_runbook.md). The original preparation instructions below are for rebuilding data from the external combined archive; they are not needed for this branch's already committed manifests.
+
+
 Multi-Scale Density Estimation for Antarctic Penguin Counting.
 
 ## Dataset
