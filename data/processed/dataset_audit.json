@@ -1,0 +1,207 @@
+{
+  "image_count": 738,
+  "json_unique_external_ids": 740,
+  "matched_image_annotation_ids": 738,
+  "annotation_records": 753,
+  "annotation_objects_by_export": {
+    "LUKE": {
+      "records": 178,
+      "objects": 19546
+    },
+    "MAISIE": {
+      "records": 265,
+      "objects": 46214
+    },
+    "JACK": {
+      "records": 176,
+      "objects": 11273
+    },
+    "THOMAS": {
+      "records": 134,
+      "objects": 60332
+    }
+  },
+  "unique_image_object_count_if_duplicate_source_selected": {
+    "MAISIE": 134660,
+    "LUKE": 134767
+  },
+  "proposal_reported_penguin_total": 135279,
+  "difference_from_proposal_total_by_duplicate_choice": {
+    "MAISIE": -619,
+    "LUKE": -512
+  },
+  "duplicate_external_ids": [
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x2240.y5376.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        105,
+        88
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x3584.y5376.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        35,
+        39
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x3584.y5824.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        355,
+        358
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x3584.y6272.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        89,
+        56
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4032.y5376.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        0,
+        16
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4032.y5824.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        305,
+        288
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4032.y6272.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        513,
+        541
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4032.y6720.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        239,
+        260
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4480.y5376.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        120,
+        75
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4480.y5824.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        244,
+        224
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4480.y6272.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        508,
+        530
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4480.y6720.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        137,
+        123
+      ],
+      "annotations_identical": false
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4928.y4928.png",
+      "sources": [
+        "LUKE",
+        "MAISIE"
+      ],
+      "counts": [
+        55,
+        0
+      ],
+      "annotations_identical": false
+    }
+  ],
+  "orphan_annotation_ids": [
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4928.y4032.png",
+      "sources": [
+        "MAISIE"
+      ]
+    },
+    {
+      "external_id": "Bas2019_01c_003~030_rg.chop.x4928.y4480.png",
+      "sources": [
+        "MAISIE"
+      ]
+    }
+  ],
+  "images_without_annotation": [],
+  "note": "Duplicate annotations are not silently merged. Resolve them explicitly before creating the training manifest."
+}
