@@ -1,0 +1,22 @@
+{
+  "epoch": 20,
+  "checkpoint_selection": "Fixed final epoch 20; not validation-selected best",
+  "checkpoint_local_relative_path": "outputs/baseline_run/epoch20.pt",
+  "checkpoint_sha256": "f6f348948aa06d997df280a1aca998011b2fae0953383eba6b36a5a72d9824e1",
+  "checkpoint_uploaded": false,
+  "use_dcb": false,
+  "pretrained": true,
+  "dcb_branch_channels": null,
+  "parameters": 22974530,
+  "training_commit_recorded_in_checkpoint": false,
+  "source_commit_at_packaging": "45562c72ecd0b79c6ec303d3393e9c36886d9bc4",
+  "training_continuation": "Resumed after epoch 5; RNG/DataLoader state was not restored",
+  "loss_effective_defaults": {
+    "lambda_seg": 0.1,
+    "lambda_bg": 0.05,
+    "foreground_weight": 1.0,
+    "background_weight": 1.0,
+    "use_hard_negative": false
+  },
+  "evaluation": "146 validation images, final mask S>=0.5, stride 8, shared adjudicated JSONL"
+}

@@ -1,0 +1,22 @@
+{
+  "epoch": 20,
+  "checkpoint_selection": "Fixed final epoch 20; not validation-selected best",
+  "checkpoint_local_relative_path": "outputs/dcb_run/epoch20.pt",
+  "checkpoint_sha256": "b008271427480fd51945aca312d45a31332d515d907866cca9b99ae0791503a2",
+  "checkpoint_uploaded": false,
+  "use_dcb": true,
+  "pretrained": true,
+  "dcb_branch_channels": 128,
+  "parameters": 24941506,
+  "training_commit_recorded_in_checkpoint": false,
+  "source_commit_at_packaging": "45562c72ecd0b79c6ec303d3393e9c36886d9bc4",
+  "training_continuation": "Continuous 20-epoch run",
+  "loss_effective_defaults": {
+    "lambda_seg": 0.1,
+    "lambda_bg": 0.05,
+    "foreground_weight": 1.0,
+    "background_weight": 1.0,
+    "use_hard_negative": false
+  },
+  "evaluation": "146 validation images, final mask S>=0.5, stride 8, shared adjudicated JSONL"
+}

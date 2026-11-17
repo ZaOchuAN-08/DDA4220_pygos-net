@@ -1,0 +1,36 @@
+{
+  "packaged_date": "2026-11-18",
+  "timezone": "Asia/Shanghai",
+  "split": "validation",
+  "train_size": 446,
+  "val_size": 146,
+  "test_size": 146,
+  "test_evaluated": false,
+  "dataset_total_count": 134767,
+  "seed": 42,
+  "device": "Apple M5 MPS",
+  "environment": {
+    "python": "3.12.14",
+    "platform": "macOS-27.2.1-arm64-arm-64bit",
+    "torch": "2.15.0",
+    "torchvision": "0.29.2",
+    "numpy": "2.5.5",
+    "pandas": "3.1.1",
+    "matplotlib": "3.11.2",
+    "PyYAML": "6.0.3"
+  },
+  "manifest_sha256": {
+    "data/processed/manifest.jsonl": "fa397324c9ac3da5d3254e7f434459d83d6dff4a4b1c0b341882f998dd0b297f",
+    "data/splits/train.jsonl": "a74f3c6c5e12c3458f7956556e2d273baaf53145dfb537979dcaefab22cc6a77",
+    "data/splits/val.jsonl": "a3485935ac9cbd0879196648e74c494dacd74c75a2b8ddf714b1d4a7cc062358",
+    "data/splits/test.jsonl": "ee394077e247610e5cf2986b9f2f72a09bd3084c4705bf84e474d0249fb543a9"
+  },
+  "limitations": [
+    "Single seed and 20 epochs, batch size 1 rather than proposal batch 16/600 epochs.",
+    "Baseline resumed after epoch 5 without restoring RNG/loader state; DCB continuous.",
+    "Shared heads were not explicitly initialized to identical tensors across variants.",
+    "Dataset split is reconstructed, not original author per-image assignment.",
+    "No Top-K hard-negative loss enabled in either experiment.",
+    "No claim of strict paper replication or a causal architecture-only effect."
+  ]
+}
