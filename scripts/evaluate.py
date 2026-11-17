@@ -17,7 +17,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
-from pygosnet.evaluation import (  # noqa: E402
+from pygosnet.eval import (  # noqa: E402
     apply_output_mask,
     assign_tier,
     evaluate_by_tier,
@@ -26,7 +26,7 @@ from pygosnet.evaluation import (  # noqa: E402
     split_counts,
     summarize_counts,
 )
-from pygosnet.evaluation.error_analysis import (  # noqa: E402
+from pygosnet.eval.error_analysis import (  # noqa: E402
     counting_breakdown,
     summarize_error_sources,
 )
@@ -212,7 +212,7 @@ def main(argv=None) -> int:
     )
 
     if not args.no_figures:
-        from pygosnet.evaluation.visualize import (
+        from pygosnet.eval.visualize import (
             plot_count_histogram,
             plot_count_scatter,
             plot_tier_metrics,
@@ -240,4 +240,3 @@ def main(argv=None) -> int:
 
 if __name__ == "__main__":
     raise SystemExit(main())
-
