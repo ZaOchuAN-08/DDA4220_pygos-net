@@ -64,6 +64,9 @@ class PenguinDataset(Dataset):
             "image": image_tensor,
             "density": density_tensor,
             "seg_mask": seg_tensor,
+            # Both masks use the same GT density-support definition.
+            "structural_mask": seg_tensor.clone(),
+            "sample_key": f"{image_path.parent.name}/{image_path.name}",
             "count": count,
             "tier": density_tier(len(points)),
             "image_id": row["image_id"],

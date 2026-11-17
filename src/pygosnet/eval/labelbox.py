@@ -82,3 +82,22 @@ def split_counts(index: dict[str, dict], keys) -> np.ndarray:
         preview = ", ".join(missing[:3])
         raise KeyError(f"{len(missing)} split samples missing from annotations, e.g.: {preview}")
     return np.asarray([index[key]["count"] for key in keys], dtype=np.float64)
+
+
+def load_manifest_index(path):
+    """Use the adjudicated A manifests as the single GT source for evaluation."""
+    index = {}
+    for line in Path(path).read_text(encoding="utf-8").splitlines():
+        if not line.strip():
+            continue
+        row = json.loads(line)
+        image = Path(row["image_path"])
+        key = f"{image.parent.name}/{image.name}"
+        if key in index:
+            raise ValueError(f"Duplicate manifest sample key: {key}")
+        points = np.asarray(row["points"], dtype=np.float64).reshape(-1, 2)
+        if int(row["count"]) != len(points):
+            raise ValueError(f"Manifest count disagrees with points: {key}")
+        index[key] = {"site": image.parent.name, "name": image.name,
+                      "key": key, "count": len(points), "points_yx": points[:, ::-1].copy()}
+    return index

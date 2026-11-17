@@ -29,7 +29,10 @@ class TrainTransform:
 
         if random.random() < self.horizontal_flip_p:
             image = image.transpose(Image.Transpose.FLIP_LEFT_RIGHT)
-            cropped = [(self.crop_size - x, y) for x, y in cropped]
+            # Continuous edge coordinates reflect as W-x; keep x=0
+            # strictly inside the half-open [0,W) range after reflection.
+            right = float(np.nextafter(np.float32(self.crop_size), np.float32(0)))
+            cropped = [(min(self.crop_size - x, right), y) for x, y in cropped]
         return image, cropped
 
 

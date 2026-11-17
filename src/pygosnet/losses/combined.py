@@ -20,6 +20,7 @@ class CombinedLoss(nn.Module):
         ssim_data_range: float = 1.0,
         foreground_weight: float = 1.0,
         background_weight: float = 1.0,
+        use_hard_negative: bool = True,
     ):
         super().__init__()
 
@@ -28,6 +29,9 @@ class CombinedLoss(nn.Module):
 
         self.lambda_seg = lambda_seg
         self.lambda_bg = lambda_bg
+        # Compatibility switch: current implementation remains background MSE,
+        # not the proposal's Top-K hard-negative objective.
+        self.use_hard_negative = bool(use_hard_negative)
 
         self.structural_loss = MaskedStructuralLoss(
             num_scales=num_scales,
@@ -80,10 +84,8 @@ class CombinedLoss(nn.Module):
             seg_mask,
         )
 
-        bg = self.background_loss(
-            density_pred,
-            structural_mask,
-        )
+        bg = (self.background_loss(density_pred, structural_mask)
+              if self.use_hard_negative else density_pred.sum() * 0.0)
 
         total = (
             sl

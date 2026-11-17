@@ -26,6 +26,7 @@ from pygosnet.eval import (  # noqa: E402
     split_counts,
     summarize_counts,
 )
+from pygosnet.eval.labelbox import load_manifest_index
 from pygosnet.eval.error_analysis import (  # noqa: E402
     counting_breakdown,
     summarize_error_sources,
@@ -143,6 +144,7 @@ def _optional_float(text):
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description="Pygos-Net evaluation")
     parser.add_argument("--split", default="data/splits/test.json", help="official split file")
+    parser.add_argument("--manifest", help="A JSONL manifest; overrides --split and raw annotation parsing")
     parser.add_argument("--pred-dir", required=True, help="directory of predicted density maps")
     parser.add_argument("--ann-glob", default="*_export-*.json", help="Labelbox export glob")
     parser.add_argument("--ann-root", default=".", help="directory containing the exports")
@@ -160,13 +162,17 @@ def parse_args(argv=None):
 
 def main(argv=None) -> int:
     args = parse_args(argv)
-    split_path = Path(args.split)
+    split_path = Path(args.manifest or args.split)
     pred_dir = Path(args.pred_dir)
     out_dir = Path(args.out_dir) if args.out_dir else Path("outputs/eval") / split_path.stem
     out_dir.mkdir(parents=True, exist_ok=True)
 
-    index = load_index(args.ann_glob, root=args.ann_root)
-    keys = load_split(split_path)
+    if args.manifest:
+        index = load_manifest_index(split_path)
+        keys = list(index)
+    else:
+        index = load_index(args.ann_glob, root=args.ann_root)
+        keys = load_split(split_path)
     gt_counts = split_counts(index, keys)
 
     duplicate_names = {Path(key.split("/", 1)[1]).name for key in keys}
