@@ -44,7 +44,7 @@ def make_fake_batch(batch_size=2, height=32, width=32):
     # Both masks are the same label under this definition.
     structural_mask = (density_gt > 1e-3).float()
     seg_mask = structural_mask.clone()
-
+    
     return {
         "density": density_gt,
         "structural_mask": structural_mask,
@@ -80,7 +80,7 @@ def test_individual_losses():
     sl = MaskedStructuralLoss()(
         outputs["density"],
         batch["density"],
-        batch["structural_mask"],
+        batch["seg_mask"],
     )
 
     seg = WeightedSegmentationLoss()(
@@ -90,7 +90,7 @@ def test_individual_losses():
 
     bg = BackgroundSuppressionLoss()(
         outputs["density"],
-        batch["structural_mask"],
+        batch["seg_mask"],
     )
 
     for name, value in [
@@ -145,15 +145,19 @@ def test_combined_loss_and_backward():
     print("\nBackward pass: PASS")
 
 
-def test_masks_are_identical():
+def test_support_mask_definition():
     batch = make_fake_batch()
+
+    expected_mask = (
+        batch["density"] > 1e-3
+    ).float()
 
     assert torch.equal(
         batch["seg_mask"],
-        batch["structural_mask"],
+        expected_mask,
     )
 
-    print("seg_mask == structural_mask: PASS")
+    print("Support mask definition: PASS")
 
 
 def test_background_edge_cases():
@@ -186,7 +190,7 @@ def test_background_edge_cases():
 if __name__ == "__main__":
     test_individual_losses()
     test_combined_loss_and_backward()
-    test_masks_are_identical()
+    test_support_mask_definition()
     test_background_edge_cases()
 
     print("\nAll mock-input tests passed!")

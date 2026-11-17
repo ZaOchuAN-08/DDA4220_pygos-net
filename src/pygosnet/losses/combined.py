@@ -50,7 +50,6 @@ class CombinedLoss(nn.Module):
         required_outputs = ("density", "segmentation_logits")
         required_batch = (
             "density",
-            "structural_mask",
             "seg_mask",
         )
 
@@ -66,13 +65,14 @@ class CombinedLoss(nn.Module):
         segmentation_logits = outputs["segmentation_logits"]
 
         density_gt = batch["density"]
-        structural_mask = batch["structural_mask"]
         seg_mask = batch["seg_mask"]
+
+        support_mask = seg_mask
 
         sl = self.structural_loss(
             density_pred,
             density_gt,
-            structural_mask,
+            support_mask,
         )
 
         seg = self.segmentation_loss(
@@ -82,7 +82,7 @@ class CombinedLoss(nn.Module):
 
         bg = self.background_loss(
             density_pred,
-            structural_mask,
+            support_mask,
         )
 
         total = (
