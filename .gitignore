@@ -1,7 +1,4 @@
 # Data and generated outputs
-data/raw/
-data/processed/manifest.jsonl
-data/splits/*.jsonl
 outputs/
 *.pt
 *.pth
