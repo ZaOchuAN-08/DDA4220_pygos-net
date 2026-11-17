@@ -12,15 +12,15 @@ ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
 
 from pygosnet.baselines.faster_rcnn import analyze_bboxes, check_feasibility  # noqa: E402
-from pygosnet.evaluation.error_analysis import (  # noqa: E402
+from pygosnet.eval.error_analysis import (  # noqa: E402
     counting_breakdown,
     density_mass_decomposition,
     image_error_record,
     summarize_error_sources,
     support_from_points,
 )
-from pygosnet.evaluation.labelbox import parse_record, split_counts  # noqa: E402
-from pygosnet.evaluation.metrics import (  # noqa: E402
+from pygosnet.eval.labelbox import parse_record, split_counts  # noqa: E402
+from pygosnet.eval.metrics import (  # noqa: E402
     apply_output_mask,
     check_count_preservation,
     count_from_density,
@@ -32,7 +32,7 @@ from pygosnet.evaluation.metrics import (  # noqa: E402
     rmse,
     summarize_counts,
 )
-from pygosnet.evaluation.tier_eval import assign_tier, evaluate_by_tier, tier_distribution  # noqa: E402
+from pygosnet.eval.tier_eval import assign_tier, evaluate_by_tier, tier_distribution  # noqa: E402
 
 
 # counts and metrics
