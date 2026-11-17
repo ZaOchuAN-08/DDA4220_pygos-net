@@ -6,7 +6,7 @@ import json
 
 import numpy as np
 
-from ..evaluation.labelbox import load_index
+from ..eval.labelbox import load_index
 
 # measured: 137k boxes, median 5x5 px, p95 max side <= 8 px, max 20 px,
 # so 6 px targets are sub-cell at stride 8 and detectors stay reference-only.
