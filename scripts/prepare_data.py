@@ -98,7 +98,7 @@ def main():
     # Full image/point manifests require a transparent choice for the duplicate exports.
     if args.duplicate_source is None and audit["duplicate_external_ids"]:
         print("\nAUDIT COMPLETE. Image split lists were created, but annotation manifests were not.")
-        print("Review data/processed/annotation_conflicts.csv, agree on an annotator source, then rerun with --duplicate-source MAISIE or LUKE.")
+        print("Review data/processed/annotation_conflicts.csv, agree on an annotator source, then rerun with --duplicate-source <your choice>.")
         return
     rows = build_rows(relative_images, annotation_root, args.duplicate_source)
     if len(rows) != 738:

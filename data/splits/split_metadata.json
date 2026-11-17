@@ -9,6 +9,6 @@
   "seed": 42,
   "method": "random shuffle with fixed seed and fixed 446/146/146 sizes",
   "is_original_author_image_assignment": false,
-  "duplicate_annotation_source": null,
+  "duplicate_annotation_source": "LUKE",
   "warning": "Reconstructed split, not a recovered official per-image split. The source paper reports the 3:1:1 split sizes but not the per-image assignment in the supplied files."
 }
