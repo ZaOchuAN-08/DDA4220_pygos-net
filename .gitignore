@@ -1,0 +1,15 @@
+# Data and generated outputs
+data/raw/
+data/processed/manifest.jsonl
+data/splits/*.jsonl
+outputs/
+*.pt
+*.pth
+*.ckpt
+*.log
+__pycache__/
+.pytest_cache/
+.venv/
+venv/
+.env
+.DS_Store
