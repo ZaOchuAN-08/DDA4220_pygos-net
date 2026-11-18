@@ -14,3 +14,7 @@ Use Git LFS to download the files after checking out `integration/abcd-interface
 ```sh
 git lfs pull --include="experiments/preliminary_epoch200_windows/checkpoints/*.pt"
 ```
+
+[Best-checkpoint validation and breakdown by density tier](best-validation.md)
+
+[Best-checkpoint density comparison](best-density-comparison.png)
