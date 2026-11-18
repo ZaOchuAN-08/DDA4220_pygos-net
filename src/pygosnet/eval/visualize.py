@@ -177,6 +177,38 @@ def plot_tier_metrics(tier_frame, save_path=None, dpi: int = 200):
     return fig
 
 
+def plot_masking_effect(effect_frame, save_path=None, dpi: int = 200):
+    # left: what the mask removes; right: MAE before/after, to expose over-suppression
+    tiers = list(effect_frame["tier"])
+    positions = np.arange(len(tiers))
+    width = 0.38
+
+    fig, (left, right) = plt.subplots(1, 2, figsize=(10.4, 3.9))
+    left.bar(positions - width / 2, effect_frame["fp_removed_mass"], width,
+             label="background FP removed", color="#4c72b0")
+    left.bar(positions + width / 2, effect_frame["true_suppressed_mass"], width,
+             label="true-target mass suppressed", color="#c44e52")
+    left.set_xticks(positions)
+    left.set_xticklabels(tiers)
+    left.set_ylabel("Density mass")
+    left.set_title("What the segmentation mask removes", fontsize=10)
+    left.legend(frameon=False, fontsize=8)
+
+    right.bar(positions - width / 2, effect_frame["raw_mae"], width, label="raw D", color="#8c8c8c")
+    right.bar(positions + width / 2, effect_frame["masked_mae"], width, label="masked D_out", color="#55a868")
+    right.set_xticks(positions)
+    right.set_xticklabels(tiers)
+    right.set_ylabel("MAE (penguins)")
+    right.set_title("Counting error before/after masking", fontsize=10)
+    right.legend(frameon=False, fontsize=8)
+
+    fig.tight_layout()
+    _prepare(save_path)
+    if save_path is not None:
+        fig.savefig(save_path, dpi=dpi, bbox_inches="tight")
+    return fig
+
+
 def plot_count_histogram(counts, bins: int = 40, save_path=None, dpi: int = 200):
     values = np.asarray(to_numpy(counts), dtype=np.float64).ravel()
     fig, axis = plt.subplots(figsize=(6.2, 3.6))

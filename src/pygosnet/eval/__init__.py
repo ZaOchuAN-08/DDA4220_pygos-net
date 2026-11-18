@@ -10,7 +10,10 @@ from .error_analysis import (
     decompose_with_support,
     density_mass_decomposition,
     image_error_record,
+    masking_effect_record,
+    select_representative_cases,
     summarize_error_sources,
+    summarize_masking_effect,
 )
 from .labelbox import build_index, load_index, load_split, parse_record, split_counts
 from .metrics import (
@@ -48,11 +51,14 @@ __all__ = [
     "load_index",
     "load_split",
     "mae",
+    "masking_effect_record",
     "parse_record",
     "relative_count_error",
     "rmse",
+    "select_representative_cases",
     "split_counts",
     "summarize_counts",
     "summarize_error_sources",
+    "summarize_masking_effect",
     "tier_distribution",
 ]

@@ -7,6 +7,7 @@ import sys
 from pathlib import Path
 
 import numpy as np
+import pandas as pd
 
 ROOT = Path(__file__).resolve().parents[1]
 sys.path.insert(0, str(ROOT / "src"))
@@ -16,7 +17,10 @@ from pygosnet.eval.error_analysis import (  # noqa: E402
     counting_breakdown,
     density_mass_decomposition,
     image_error_record,
+    masking_effect_record,
+    select_representative_cases,
     summarize_error_sources,
+    summarize_masking_effect,
     support_from_points,
 )
 from pygosnet.eval.labelbox import parse_record, split_counts  # noqa: E402
@@ -222,6 +226,60 @@ def test_error_summary_aggregation():
     assert frame.loc["L0", "gt_total"] == 0.0
     assert frame.loc["L0", "bg_fp_mass"] > 0
     assert abs(frame.loc["L1", "pred_total"] + frame.loc["L0", "pred_total"] - frame.loc["ALL", "pred_total"]) < 1e-9
+
+
+# output masking effect
+def _masking_pair():
+    # 2 GT on support, 2 units of background FP, mask suppresses one GT cell and all FP
+    points = np.array([[8.0, 8.0], [24.0, 8.0]])
+    raw = np.zeros((7, 7))
+    raw[1, 1] = 1.0
+    raw[3, 1] = 1.0
+    raw[6, 6] = 2.0
+    mask = np.zeros((7, 7))
+    mask[1, 1] = 1.0
+    return points, raw, raw * mask
+
+
+def test_masking_effect_separates_fp_from_true_suppression():
+    points, raw, masked = _masking_pair()
+    record = masking_effect_record(raw, masked, points, gt_count=2.0, stride=8, radius_cells=0)
+    assert record["tier"] == "L1"
+    assert abs(record["raw_count"] - 4.0) < 1e-9
+    assert abs(record["masked_count"] - 1.0) < 1e-9
+    assert abs(record["fp_removed_mass"] - 2.0) < 1e-9
+    assert abs(record["true_suppressed_mass"] - 1.0) < 1e-9
+    assert abs(record["raw_mae"] - 2.0) < 1e-9
+    assert abs(record["masked_mae"] - 1.0) < 1e-9
+
+
+def test_summarize_masking_effect_per_tier():
+    points, raw, masked = _masking_pair()
+    record = masking_effect_record(raw, masked, points, gt_count=2.0, stride=8, radius_cells=0)
+    empty = masking_effect_record(np.zeros((7, 7)), np.zeros((7, 7)), np.zeros((0, 2)), gt_count=0.0,
+                                  stride=8, radius_cells=0)
+    frame = summarize_masking_effect([record, empty]).set_index("tier")
+
+    assert abs(frame.loc["L1", "mass_suppressed_share"] - 0.75) < 1e-9
+    assert abs(frame.loc["L1", "over_suppression_rate"] - 0.5) < 1e-9
+    assert abs(frame.loc["L1", "bg_fp_rate_raw"] - 0.5) < 1e-9
+    assert abs(frame.loc["L1", "bg_fp_rate_masked"] - 0.0) < 1e-9
+    assert abs(frame.loc["L1", "mae_delta"] - (-1.0)) < 1e-9
+    assert abs(frame.loc["ALL", "masked_total"] - 1.0) < 1e-9
+
+
+def test_select_representative_cases_picks_worst_per_tier_and_source():
+    frame = pd.DataFrame([
+        {"tier": "L1", "key": "a", "bg_fp_rate": 0.1, "miss_rate": 0.2, "excess_rate": 0.0},
+        {"tier": "L1", "key": "b", "bg_fp_rate": 0.7, "miss_rate": 0.1, "excess_rate": 0.0},
+        {"tier": "L4", "key": "c", "bg_fp_rate": 0.0, "miss_rate": 0.6, "excess_rate": 0.4},
+    ])
+    cases = select_representative_cases(frame)
+    l1 = cases[cases["tier"] == "L1"]
+    # bg false positives and missed targets come from different images
+    assert set(l1["key"]) == {"a", "b"}
+    assert set(l1["case_type"]) == {"bg_fp_rate", "miss_rate"}
+    assert cases[cases["tier"] == "L4"].iloc[0]["key"] == "c"
 
 
 # parsing and feasibility

@@ -1,0 +1,21 @@
+﻿{
+  "bbox_stats": {
+    "num_images_with_boxes": 558,
+    "num_boxes": 137187,
+    "median_w": 5.0,
+    "median_h": 5.0,
+    "median_max_dim_px": 6.0,
+    "p95_max_dim_px": 8.0,
+    "max_dim_px": 20.0,
+    "tiny_fraction_le4": 0.11069561984736163,
+    "tiny_fraction_le8": 0.9728910173704506,
+    "unique_size_pairs": 158
+  },
+  "feasibility": {
+    "suitable_as_primary_method": false,
+    "usable_as_reference_baseline": true,
+    "reason": "median target size 6.0px below 8.0px (~one stride-8 cell)",
+    "stride": 8,
+    "recommendation": "Reference-only detector; needs high-resolution FPN and small anchors"
+  }
+}

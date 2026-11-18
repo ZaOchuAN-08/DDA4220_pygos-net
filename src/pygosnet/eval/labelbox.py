@@ -98,6 +98,7 @@ def load_manifest_index(path):
         points = np.asarray(row["points"], dtype=np.float64).reshape(-1, 2)
         if int(row["count"]) != len(points):
             raise ValueError(f"Manifest count disagrees with points: {key}")
-        index[key] = {"site": image.parent.name, "name": image.name,
-                      "key": key, "count": len(points), "points_yx": points[:, ::-1].copy()}
+        index[key] = {"site": image.parent.name, "name": image.name, "key": key,
+                      "image_path": row["image_path"], "count": len(points),
+                      "points_yx": points[:, ::-1].copy()}
     return index

@@ -184,6 +184,102 @@ def _aggregate(subset: pd.DataFrame, tier: str) -> dict:
     return row
 
 
+def masking_effect_record(
+    raw_density,
+    masked_density,
+    gt_points_yx,
+    gt_count: float,
+    tier: str | None = None,
+    stride: int = 8,
+    radius_cells: int = 1,
+) -> dict:
+    # raw vs masked output; separates background-FP removal from true-target suppression
+    raw = counting_breakdown(raw_density, gt_points_yx, gt_count, stride=stride, radius_cells=radius_cells)
+    masked = counting_breakdown(masked_density, gt_points_yx, gt_count, stride=stride, radius_cells=radius_cells)
+
+    return {
+        "tier": tier if tier is not None else str(assign_tier(gt_count)),
+        "gt_count": float(gt_count),
+        "raw_count": raw["pred_total"],
+        "masked_count": masked["pred_total"],
+        "raw_mae": abs(raw["pred_total"] - float(gt_count)),
+        "masked_mae": abs(masked["pred_total"] - float(gt_count)),
+        "raw_bg_fp_mass": raw["bg_fp_mass"],
+        "masked_bg_fp_mass": masked["bg_fp_mass"],
+        "raw_tp_mass": raw["tp_mass"],
+        "masked_tp_mass": masked["tp_mass"],
+        "fp_removed_mass": raw["bg_fp_mass"] - masked["bg_fp_mass"],
+        "true_suppressed_mass": raw["tp_mass"] - masked["tp_mass"],
+        "excess_suppressed_mass": raw["excess_mass"] - masked["excess_mass"],
+    }
+
+
+def summarize_masking_effect(records) -> pd.DataFrame:
+    # per-tier gain/loss of D_out = D * 1[S >= 0.5]
+    frame = pd.DataFrame(list(records))
+    required = {"tier", "gt_count", "raw_mae", "masked_mae", "raw_bg_fp_mass", "masked_bg_fp_mass",
+                "raw_tp_mass", "masked_tp_mass"}
+    missing = required - set(frame.columns)
+    if missing:
+        raise KeyError(f"Masking records missing fields: {sorted(missing)}")
+
+    rows = []
+    for tier in list(TIER_NAMES) + ["ALL"]:
+        subset = frame if tier == "ALL" else frame[frame["tier"] == tier]
+        if subset.empty:
+            continue
+        gt_total = float(subset["gt_count"].sum())
+        raw_total = float(subset["raw_count"].sum())
+        masked_total = float(subset["masked_count"].sum())
+        fp_removed = float(subset["fp_removed_mass"].sum())
+        true_suppressed = float(subset["true_suppressed_mass"].sum())
+        row = {
+            "tier": tier,
+            "n": len(subset),
+            "gt_total": gt_total,
+            "raw_total": raw_total,
+            "masked_total": masked_total,
+            "raw_mae": float(subset["raw_mae"].mean()),
+            "masked_mae": float(subset["masked_mae"].mean()),
+            "mae_delta": float(subset["masked_mae"].mean() - subset["raw_mae"].mean()),
+            "mass_suppressed": raw_total - masked_total,
+            "mass_suppressed_share": (raw_total - masked_total) / raw_total if raw_total > EPS else 0.0,
+            "fp_removed_mass": fp_removed,
+            "true_suppressed_mass": true_suppressed,
+            # share of surviving prediction mass coming from background
+            "bg_fp_rate_raw": float(subset["raw_bg_fp_mass"].sum()) / raw_total if raw_total > EPS else 0.0,
+            "bg_fp_rate_masked": float(subset["masked_bg_fp_mass"].sum()) / masked_total if masked_total > EPS else 0.0,
+            # true mass lost to the mask relative to GT; the L3/L4 over-suppression check
+            "over_suppression_rate": true_suppressed / gt_total if gt_total > EPS else 0.0,
+            "miss_rate": max(gt_total - float(subset["masked_tp_mass"].sum()), 0.0) / gt_total
+            if gt_total > EPS else 0.0,
+        }
+        rows.append(row)
+    return pd.DataFrame(rows)
+
+
+def select_representative_cases(frame, metrics=("bg_fp_rate", "miss_rate", "excess_rate")) -> pd.DataFrame:
+    # highest-error image per tier for each error source; supports qualitative inspection
+    frame = pd.DataFrame(frame)
+    rows = []
+    for tier in TIER_NAMES:
+        subset = frame[frame["tier"] == tier]
+        if subset.empty:
+            continue
+        chosen = set()
+        for metric in metrics:
+            if metric not in subset.columns:
+                continue
+            index = subset[metric].idxmax()
+            if index in chosen:
+                continue
+            chosen.add(index)
+            row = subset.loc[index].to_dict()
+            row["case_type"] = metric
+            rows.append(row)
+    return pd.DataFrame(rows)
+
+
 def summarize_error_sources(records) -> pd.DataFrame:
     frame = pd.DataFrame(list(records))
     required = {"tier", "gt_total", "pred_total", "tp_mass", "bg_fp_mass", "missed_mass"}
